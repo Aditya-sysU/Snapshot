@@ -1,0 +1,6 @@
+{
+  "name": "SNAPSHOT Fashion Show – Season 2",
+  "description": "Official showcase platform for SNAPSHOT Fashion Show – Season 2: S² Stage Era on 27 September 2026.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

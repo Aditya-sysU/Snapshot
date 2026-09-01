@@ -69,7 +69,7 @@ export const AboutModal: React.FC<AboutModalProps> = ({
               </div>
               <div className="flex items-center gap-2 text-neutral-700">
                 <CheckCircle className="w-4 h-4 text-neutral-900 shrink-0" />
-                <span>Participant Fee: ₹3,999 | Audience Pass: ₹200</span>
+                <span>Participant Fee: ₹2,999 | Audience Pass: ₹200</span>
               </div>
             </div>
           </div>

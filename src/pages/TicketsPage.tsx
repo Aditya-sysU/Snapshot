@@ -41,7 +41,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, []);
 
-  const unitPrice = ticketType === 'participant' ? 3999 : 200;
+  const unitPrice = ticketType === 'participant' ? 2999 : 200;
   const totalPrice = unitPrice * (ticketType === 'participant' ? 1 : quantity);
 
   const generateWhatsAppMessage = (data: {
@@ -70,7 +70,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
         `• Phone: ${data.phone}\n` +
         (data.email ? `• Email: ${data.email}\n` : '') +
         `• Audition Slot: ${slotText}\n` +
-        `• Total Amount: ₹3,999 (All-Inclusive Runway Pass)\n` +
+        `• Total Amount: ₹2,999 (All-Inclusive Runway Pass)\n` +
         `• Event: SNAPSHOT Fashion Show (Season 2)\n` +
         `• Location: Bhopal, MP`;
     }
@@ -250,7 +250,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                 </div>
                 <div className="text-right">
                   <span className="font-headline font-extrabold text-2xl text-neutral-900">
-                    ₹3,999
+                    ₹2,999
                   </span>
                   <span className="text-xs text-neutral-500 block">all-inclusive</span>
                 </div>

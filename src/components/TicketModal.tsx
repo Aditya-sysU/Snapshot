@@ -24,7 +24,7 @@ export const TicketModal: React.FC<TicketModalProps> = ({
 
   if (!isOpen) return null;
 
-  const unitPrice = ticketType === 'participant' ? 3999 : 200;
+  const unitPrice = ticketType === 'participant' ? 2999 : 200;
   const totalPrice = unitPrice * (ticketType === 'participant' ? 1 : quantity);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -176,7 +176,7 @@ export const TicketModal: React.FC<TicketModalProps> = ({
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs font-semibold text-neutral-600">Participant</span>
-                      <span className="font-brand font-bold text-sm text-black">₹3,999</span>
+                      <span className="font-brand font-bold text-sm text-black">₹2,999</span>
                     </div>
                     <p className="text-[11px] text-neutral-500">
                       Audition, modeling showcase, photoshoot & ramp walk.

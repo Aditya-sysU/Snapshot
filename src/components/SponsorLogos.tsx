@@ -6,6 +6,9 @@ interface SponsorCardProps {
   fallbackComponent: React.ReactNode;
   aspectClass?: string;
   borderColor?: string;
+  imgFit?: 'cover' | 'contain';
+  imgPadding?: string;
+  bgClass?: string;
 }
 
 const SponsorImageCard: React.FC<SponsorCardProps> = ({
@@ -14,6 +17,9 @@ const SponsorImageCard: React.FC<SponsorCardProps> = ({
   fallbackComponent,
   aspectClass = 'aspect-square',
   borderColor = 'border-neutral-800',
+  imgFit = 'cover',
+  imgPadding = '',
+  bgClass = 'bg-black',
 }) => {
   const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
   const [imgFailed, setImgFailed] = useState(false);
@@ -32,13 +38,13 @@ const SponsorImageCard: React.FC<SponsorCardProps> = ({
 
   return (
     <div
-      className={`w-full ${aspectClass} rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-xl border ${borderColor} bg-black flex items-center justify-center`}
+      className={`w-full ${aspectClass} rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-xl border ${borderColor} ${bgClass} flex items-center justify-center relative group`}
     >
       <img
         src={imageUrls[currentSrcIndex]}
         alt={alt}
         onError={handleImageError}
-        className="w-full h-full object-cover block"
+        className={`w-full h-full ${imgFit === 'contain' ? 'object-contain' : 'object-cover'} block transition-transform duration-300 group-hover:scale-105 ${imgPadding}`}
         referrerPolicy="no-referrer"
       />
     </div>
@@ -389,3 +395,99 @@ export const TheChourasiyasCard: React.FC = () => {
     />
   );
 };
+
+// Sponsor 4: Official Partner VYVHR Emblem & Typography Logo Card
+export const OfficialPartnerEmblemCard: React.FC = () => {
+  const [emblemError, setEmblemError] = useState(false);
+  const [textError, setTextError] = useState(false);
+
+  const emblemUrls = [
+    '/assets/sponsor-4.png',
+    '/sponsor-4.png',
+    '/assets/Screenshot_2026-05-31_140751-removebg-preview.png',
+    '/Screenshot_2026-05-31_140751-removebg-preview.png',
+  ];
+  const [emblemIndex, setEmblemIndex] = useState(0);
+
+  const textUrls = [
+    '/assets/vyvhr-text-white.png',
+    '/vyvhr-text-white.png',
+  ];
+  const [textIndex, setTextIndex] = useState(0);
+
+  const handleEmblemError = () => {
+    if (emblemIndex < emblemUrls.length - 1) {
+      setEmblemIndex((prev) => prev + 1);
+    } else {
+      setEmblemError(true);
+    }
+  };
+
+  const handleTextError = () => {
+    if (textIndex < textUrls.length - 1) {
+      setTextIndex((prev) => prev + 1);
+    } else {
+      setTextError(true);
+    }
+  };
+
+  return (
+    <div
+      className="w-full aspect-square rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center relative overflow-hidden transition-all duration-300 hover:scale-[1.02] shadow-xl border border-neutral-800 bg-black group"
+    >
+      {/* Subtle luxury ambient backlight */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/[0.04] via-transparent to-white/[0.02] pointer-events-none" />
+      <div className="absolute w-44 h-44 bg-white/[0.03] rounded-full blur-2xl pointer-events-none -top-4 -right-4" />
+      <div className="absolute w-44 h-44 bg-amber-500/[0.04] rounded-full blur-3xl pointer-events-none -bottom-4 -left-4" />
+
+      {/* Main Lockup: Emblem on top + Uploaded VYVHR Text Logo below */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-full py-1">
+        {/* Emblem Image */}
+        <div className="flex-1 flex items-center justify-center w-full max-h-[62%]">
+          {!emblemError ? (
+            <img
+              src={emblemUrls[emblemIndex]}
+              alt="VYVHR Emblem"
+              onError={handleEmblemError}
+              className="w-auto h-full max-h-24 sm:max-h-28 md:max-h-32 max-w-[85%] object-contain block transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_4px_16px_rgba(255,255,255,0.2)]"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <svg
+              viewBox="0 0 200 160"
+              className="w-20 h-20 sm:w-24 sm:h-24 text-white drop-shadow-[0_4px_16px_rgba(255,255,255,0.25)]"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M20 20 L40 20 L60 50 L80 20 L100 20 L100 40 L70 80 L100 120 L80 140 L50 90 L30 140 L10 120 L40 80 L20 40 Z" />
+              <path d="M180 20 L160 20 L140 50 L120 20 L100 20 L100 40 L130 80 L100 120 L120 140 L150 90 L170 140 L190 120 L160 80 L180 40 Z" />
+            </svg>
+          )}
+        </div>
+
+        {/* Exact Uploaded Text Logo Image below the emblem */}
+        <div className="mt-2 sm:mt-3 flex items-center justify-center w-full px-2 max-h-[26%]">
+          {!textError ? (
+            <img
+              src={textUrls[textIndex]}
+              alt="VYVHR"
+              onError={handleTextError}
+              className="h-7 sm:h-8 md:h-9 w-auto max-w-[80%] object-contain block transition-transform duration-300 group-hover:scale-105 drop-shadow-[0_2px_12px_rgba(255,255,255,0.28)]"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <span
+              className="text-white text-2xl sm:text-3xl font-black tracking-[0.22em] uppercase leading-none select-none drop-shadow-[0_2px_10px_rgba(255,255,255,0.3)]"
+              style={{
+                fontFamily: "'Bodoni Moda', 'Cinzel', 'Playfair Display', serif",
+              }}
+            >
+              VYVHR
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+

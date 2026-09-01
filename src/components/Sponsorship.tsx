@@ -4,6 +4,7 @@ import {
   StylishFashionStudioCard,
   KamjuCreativesCard,
   TheChourasiyasCard,
+  OfficialPartnerEmblemCard,
 } from './SponsorLogos';
 
 interface SponsorshipProps {
@@ -29,8 +30,9 @@ export const Sponsorship: React.FC<SponsorshipProps> = ({ onOpenSponsorModal }) 
         </p>
       </div>
 
-      {/* 3 Sponsor Logos Side by Side in Equal Card Sizes */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 items-stretch">
+      {/* 4 Sponsor Logos Side by Side in Equal Card Sizes */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 items-stretch">
+        <OfficialPartnerEmblemCard />
         <StylishFashionStudioCard />
         <KamjuCreativesCard />
         <TheChourasiyasCard />

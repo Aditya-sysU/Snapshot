@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import {
   Shirt,
@@ -7,7 +7,6 @@ import {
   Sparkles,
   Footprints,
   Users,
-  ArrowUpRight
 } from 'lucide-react';
 
 interface ParticipantShowcaseProps {
@@ -133,22 +132,52 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
     },
   ];
 
+  const [maxTranslateX, setMaxTranslateX] = useState(0);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+
+  // Measure exact horizontal distance needed so card 6 is 100% visible with margin on all devices
+  useEffect(() => {
+    const updateDistance = () => {
+      if (trackRef.current) {
+        const scrollWidth = trackRef.current.scrollWidth;
+        const clientWidth = window.innerWidth;
+        // On mobile, give 24px right gutter so the 6th card is centered and fully visible
+        const endPadding = window.innerWidth < 640 ? 32 : 80;
+        const distance = Math.max(0, scrollWidth - clientWidth + endPadding);
+        setMaxTranslateX(distance);
+      }
+    };
+
+    updateDistance();
+    const timer1 = setTimeout(updateDistance, 100);
+    const timer2 = setTimeout(updateDistance, 500);
+    window.addEventListener('resize', updateDistance);
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      window.removeEventListener('resize', updateDistance);
+    };
+  }, []);
+
   // Scroll tracking pinned to the sticky container
-  // When user reaches the showcase, the section pins in place and horizontally scrolls through all 6 cards
   const { scrollYProgress } = useScroll({
     target: stickyContainerRef,
     offset: ['start start', 'end end'],
   });
 
-  // Calculate the horizontal translate percentage based on 6 cards so each scroll step exposes the next card in full view
-  const x = useTransform(scrollYProgress, [0, 0.95], ['0%', '-78%']);
+  // Calculate translation: reaches full 6th card at 88% scroll progress, then stays resting till 100%
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.88, 1],
+    [0, -maxTranslateX, -maxTranslateX]
+  );
 
   return (
     <section id="participant-showcase-section" className="relative bg-[#F8F9FA] select-none w-full">
       {/* Tall container providing natural scroll distance to progress through cards step-by-step */}
-      <div ref={stickyContainerRef} className="relative h-[320vh] sm:h-[360vh]">
-        {/* Sticky Viewport Window */}
-        <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-24 sm:pt-28 pb-10 sm:pb-14 px-6 sm:px-12 md:px-16 lg:px-20 overflow-hidden">
+      <div ref={stickyContainerRef} className="relative h-[380vh] sm:h-[360vh]">
+        {/* Sticky Viewport Window - Zero extra top margin/padding on mobile to seamlessly attach to Hero */}
+        <div className="sticky top-0 h-screen w-full flex flex-col justify-between pt-2 sm:pt-28 pb-4 sm:pb-14 px-3 sm:px-12 md:px-16 lg:px-20 overflow-hidden">
           
           {/* Top Bar: Headline (28px with League Spartan) */}
           <div className="flex items-center justify-between pb-4 border-b border-neutral-200/90 shrink-0">
@@ -164,8 +193,9 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
           {/* Center Stage: Horizontal Card Rail pinned and translating on scroll */}
           <div className="relative w-full my-auto py-4 overflow-visible">
             <motion.div
+              ref={trackRef}
               style={{ x }}
-              className="flex items-stretch gap-6 sm:gap-8 w-max will-change-transform pl-2"
+              className="flex items-stretch gap-4 sm:gap-8 w-max will-change-transform pl-1 sm:pl-2 pr-6 sm:pr-12"
             >
               {showcaseItems.map((item, idx) => {
                 const Icon = item.icon;
@@ -175,7 +205,7 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
                     key={item.id}
                     whileHover={{ y: -6 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className={`w-[320px] sm:w-[400px] md:w-[460px] lg:w-[500px] rounded-2xl bg-white border border-neutral-200/90 p-6 sm:p-8 flex flex-col justify-between shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.08)] ${item.accentColor.hoverGlow} transition-all duration-300 shrink-0 relative overflow-hidden`}
+                    className={`w-[85vw] max-w-[340px] sm:w-[400px] md:w-[460px] lg:w-[500px] rounded-2xl bg-white border border-neutral-200/90 p-5 sm:p-8 flex flex-col justify-between shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.08)] ${item.accentColor.hoverGlow} transition-all duration-300 shrink-0 relative overflow-hidden`}
                   >
                     {/* Subtle Top Accent Border */}
                     <div className={`absolute top-0 inset-x-0 h-1 bg-gradient-to-r ${item.accentColor.topBorder === 'border-t-rose-500' ? 'from-rose-500 to-pink-400' : item.accentColor.topBorder === 'border-t-amber-500' ? 'from-amber-500 to-orange-400' : item.accentColor.topBorder === 'border-t-indigo-500' ? 'from-indigo-600 to-blue-400' : item.accentColor.topBorder === 'border-t-purple-500' ? 'from-purple-600 to-fuchsia-400' : item.accentColor.topBorder === 'border-t-emerald-500' ? 'from-emerald-500 to-teal-400' : 'from-cyan-500 to-blue-400'}`} />

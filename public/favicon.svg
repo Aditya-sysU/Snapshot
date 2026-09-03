@@ -1,0 +1,28 @@
+
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="100" fill="#000000"/>
+  <circle cx="256" cy="256" r="210" stroke="#222222" stroke-width="4"/>
+  <circle cx="256" cy="256" r="190" stroke="#333333" stroke-width="2" stroke-dasharray="8 8"/>
+  
+  <!-- Stylized Camera & S Symbol in pure luxury white -->
+  <g transform="translate(64, 90) scale(2.4)">
+    <path d="M 52 28 C 70 24 86 24 94 28 C 98 30 100 37 101 44 C 103 45 125 45 131 52 C 135 56 135 90 134 94 C 133 97 125 98 100 98 C 70 98 56 100 50 100" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 47 24 C 41 24 33 27 30 36 C 27 46 36 54 44 61 C 52 68 53 77 50 87 C 47 96 36 99 30 96 C 26 94 28 86 31 82 C 34 77 36 71 36 71 M 47 24 C 54 24 57 32 55 42 C 53 48 48 51 44 54" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M 72 45 C 85 43 96 54 96 66 C 96 79 84 89 73 87" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
+    <!-- NAP -->
+    <g stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 60 52 L 60 62 M 60 52 L 64.5 62 M 64.5 52 L 64.5 62" />
+      <path d="M 68 62 L 70.5 52 L 73 62 M 68.8 59 L 72.2 59" />
+      <path d="M 76.5 62 L 76.5 52 C 78.5 52 80 53 80 55.5 C 80 58 78.5 59 76.5 59" />
+    </g>
+    <!-- HOT -->
+    <g stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 60 68 L 60 78 M 64.5 68 L 64.5 78 M 60 73 L 64.5 73" />
+      <ellipse cx="70.5" cy="73" rx="2.5" ry="5" stroke="#FFFFFF" fill="none" />
+      <path d="M 75 68 L 81 68 M 78 68 L 78 78" />
+    </g>
+    <path d="M 52 98 C 80 96 110 97 129 95" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <text x="256" y="440" text-anchor="middle" fill="#E5E5E5" font-family="sans-serif" font-size="20" font-weight="700" letter-spacing="4">A STAGE FOR NEW BEGINNING</text>
+</svg>

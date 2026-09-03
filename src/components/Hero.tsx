@@ -15,7 +15,7 @@ export const Hero: React.FC<HeroProps> = () => {
   return (
     <section
       id="hero-section"
-      className="relative w-full h-[65vh] min-h-[460px] sm:h-[75vh] sm:min-h-[580px] md:h-[82vh] md:min-h-[660px] lg:h-[88vh] lg:min-h-[740px] flex items-center justify-between overflow-hidden px-1 sm:px-3 md:px-6 lg:px-8"
+      className="relative w-full h-[65vh] min-h-[460px] sm:h-[75vh] sm:min-h-[580px] md:h-[82vh] md:min-h-[660px] lg:h-[88vh] lg:min-h-[740px] flex items-center justify-between overflow-hidden px-1 sm:px-3 md:px-6 lg:px-8 mb-0"
     >
       {/* 1. Atmospheric Runway Ambient Backdrop */}
       <div className="absolute inset-0 w-full h-full bg-[#FAF6F2] overflow-hidden -z-20">
@@ -50,7 +50,7 @@ export const Hero: React.FC<HeroProps> = () => {
           className="absolute -bottom-28 -right-20 w-[500px] sm:w-[700px] h-[500px] sm:h-[700px] rounded-full bg-gradient-to-bl from-[#CCE0FF]/45 via-[#E8DCFE]/40 to-[#FEDFE9]/50 blur-[120px] pointer-events-none"
         />
 
-        <div className="absolute bottom-0 inset-x-0 h-16 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/40 to-transparent pointer-events-none" />
+        <div className="absolute bottom-0 inset-x-0 h-6 sm:h-16 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/40 to-transparent pointer-events-none" />
       </div>
 
       {/* 2. LEFT CUTOUT MODEL (Full Top-to-Bottom, No Background) */}
@@ -58,24 +58,23 @@ export const Hero: React.FC<HeroProps> = () => {
         initial={{ opacity: 0, x: -40, scale: 0.96 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="h-full w-[130px] xs:w-[160px] sm:w-[220px] md:w-[290px] lg:w-[380px] xl:w-[440px] shrink-0 flex items-center justify-start pointer-events-auto select-none relative z-10"
+        className="h-full w-[100px] xs:w-[125px] sm:w-[220px] md:w-[290px] lg:w-[380px] xl:w-[440px] shrink-0 flex items-center justify-center pointer-events-auto select-none relative z-10"
       >
         <img
           src={leftSrc}
           alt="Snapshot Runway Model Left"
           onError={() => setLeftSrc('/hero-left-nobg.png')}
-          className="h-full w-full object-contain object-left-bottom drop-shadow-[0_16px_32px_rgba(0,0,0,0.14)] transition-transform duration-700 ease-out hover:scale-[1.02]"
+          className="h-full w-full object-contain object-center drop-shadow-[0_16px_32px_rgba(0,0,0,0.14)] transition-transform duration-700 ease-out hover:scale-[1.02]"
           referrerPolicy="no-referrer"
         />
       </motion.div>
 
-      {/* 3. CENTER HEADLINE (Raw Text Only - No Container Box, No Season Pill, No Line) */}
+      {/* 3. CENTER HEADLINE (14px on Mobile, Centered Between Equal Height Models) */}
       <div className="relative z-20 flex-1 flex items-center justify-center text-center px-1 sm:px-4 md:px-6">
         <div className="relative inline-flex flex-col items-center justify-center select-none max-w-2xl">
           <h1
             id="hero-headline"
-            className="relative flex flex-wrap items-center justify-center gap-x-2 sm:gap-x-3.5 md:gap-x-4.5 gap-y-1 sm:gap-y-2 font-headline font-bold uppercase tracking-tight"
-            style={{ fontSize: 'clamp(20px, 3.8vw, 48px)', lineHeight: '1.2' }}
+            className="relative flex flex-wrap items-center justify-center gap-x-1.5 sm:gap-x-3.5 md:gap-x-4.5 gap-y-0.5 sm:gap-y-2 font-headline font-bold uppercase tracking-tight text-[14px] sm:text-[clamp(20px,3.8vw,48px)] leading-tight sm:leading-snug"
           >
             {words.map((word, index) => (
               <motion.span
@@ -124,13 +123,13 @@ export const Hero: React.FC<HeroProps> = () => {
         initial={{ opacity: 0, x: 40, scale: 0.96 }}
         animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-        className="h-full w-[130px] xs:w-[160px] sm:w-[220px] md:w-[290px] lg:w-[380px] xl:w-[440px] shrink-0 flex items-center justify-end pointer-events-auto select-none relative z-10"
+        className="h-full w-[100px] xs:w-[125px] sm:w-[220px] md:w-[290px] lg:w-[380px] xl:w-[440px] shrink-0 flex items-center justify-center pointer-events-auto select-none relative z-10"
       >
         <img
           src={rightSrc}
           alt="Snapshot Runway Model Right"
           onError={() => setRightSrc('/hero-right-nobg.png')}
-          className="h-full w-full object-contain object-right-bottom drop-shadow-[0_16px_32px_rgba(0,0,0,0.14)] transition-transform duration-700 ease-out hover:scale-[1.02]"
+          className="h-full w-full object-contain object-center drop-shadow-[0_16px_32px_rgba(0,0,0,0.14)] transition-transform duration-700 ease-out hover:scale-[1.02]"
           referrerPolicy="no-referrer"
         />
       </motion.div>

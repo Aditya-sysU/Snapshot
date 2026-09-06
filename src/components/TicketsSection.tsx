@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Ticket, Check, ShieldCheck, Sparkles, User, Mail, Phone, Calendar, ArrowRight, QrCode, MessageSquare, Clock } from 'lucide-react';
+import { Ticket, Check, ShieldCheck, Sparkles, User, Mail, Phone, Calendar, ArrowRight, QrCode, MessageSquare, Clock, Ruler } from 'lucide-react';
 import { SnapshotLogo } from './SnapshotLogo';
+import { getEventDateStatus } from '../utils/dateStatus';
 
 export const TicketsSection: React.FC = () => {
   const [ticketType, setTicketType] = useState<'audience' | 'participant'>('audience');
@@ -9,6 +10,8 @@ export const TicketsSection: React.FC = () => {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [age, setAge] = useState('');
+  const [height, setHeight] = useState('');
   const [auditionSlot, setAuditionSlot] = useState<'6-sept' | '13-sept'>('6-sept');
   const [isSuccess, setIsSuccess] = useState(false);
   const [confirmedData, setConfirmedData] = useState<any>(null);
@@ -23,6 +26,8 @@ export const TicketsSection: React.FC = () => {
     fullName: string;
     phone: string;
     email: string;
+    age?: string;
+    height?: string;
     quantity: number;
     totalPrice: number;
     auditionSlot: '6-sept' | '13-sept';
@@ -42,6 +47,8 @@ export const TicketsSection: React.FC = () => {
       return `Hey! I want to book tickets as a participant for the runway audition.\n\n` +
         `• Name: ${data.fullName}\n` +
         `• Phone: ${data.phone}\n` +
+        (data.age ? `• Age: ${data.age} years\n` : '') +
+        (data.height ? `• Height: ${data.height}\n` : '') +
         (data.email ? `• Email: ${data.email}\n` : '') +
         `• Audition Slot: ${slotText}\n` +
         `• Total Amount: ₹2,999 (All-Inclusive Runway Pass)\n` +
@@ -60,6 +67,8 @@ export const TicketsSection: React.FC = () => {
       fullName,
       phone,
       email,
+      age: ticketType === 'participant' ? age : undefined,
+      height: ticketType === 'participant' ? height : undefined,
       ticketType,
       quantity: ticketType === 'participant' ? 1 : quantity,
       totalPrice,
@@ -75,6 +84,8 @@ export const TicketsSection: React.FC = () => {
       fullName,
       phone,
       email,
+      age,
+      height,
       quantity: ticketType === 'participant' ? 1 : quantity,
       totalPrice,
       auditionSlot,
@@ -90,6 +101,8 @@ export const TicketsSection: React.FC = () => {
     setFullName('');
     setPhone('');
     setEmail('');
+    setAge('');
+    setHeight('');
   };
 
   return (
@@ -239,7 +252,7 @@ export const TicketsSection: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
                       <div>
                         <span className="text-neutral-400 block text-[10px]">Name</span>
                         <span className="font-medium text-white">{confirmedData.fullName}</span>
@@ -248,6 +261,18 @@ export const TicketsSection: React.FC = () => {
                         <span className="text-neutral-400 block text-[10px]">Phone</span>
                         <span className="font-medium text-white">{confirmedData.phone}</span>
                       </div>
+                      {confirmedData.age && (
+                        <div>
+                          <span className="text-neutral-400 block text-[10px]">Age</span>
+                          <span className="font-medium text-white">{confirmedData.age} yrs</span>
+                        </div>
+                      )}
+                      {confirmedData.height && (
+                        <div>
+                          <span className="text-neutral-400 block text-[10px]">Height</span>
+                          <span className="font-medium text-white">{confirmedData.height}</span>
+                        </div>
+                      )}
                       <div>
                         <span className="text-neutral-400 block text-[10px]">Date</span>
                         <span className="font-medium text-white">{confirmedData.date}</span>
@@ -304,7 +329,14 @@ export const TicketsSection: React.FC = () => {
                               : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                           }`}
                         >
-                          <span className="block font-medium">Slot 1</span>
+                          <div className="flex items-center justify-between">
+                            <span className="block font-medium">Slot 1</span>
+                            {getEventDateStatus('2026-09-06').isLive && (
+                              <span className="inline-flex items-center text-[9px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full animate-pulse">
+                                LIVE
+                              </span>
+                            )}
+                          </div>
                           <span className="text-neutral-500">6 Sept 2026</span>
                         </button>
                         <button
@@ -316,7 +348,14 @@ export const TicketsSection: React.FC = () => {
                               : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
                           }`}
                         >
-                          <span className="block font-medium">Slot 2</span>
+                          <div className="flex items-center justify-between">
+                            <span className="block font-medium">Slot 2</span>
+                            {getEventDateStatus('2026-09-13').isLive && (
+                              <span className="inline-flex items-center text-[9px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full animate-pulse">
+                                LIVE
+                              </span>
+                            )}
+                          </div>
                           <span className="text-neutral-500">13 Sept 2026</span>
                         </button>
                       </div>
@@ -381,6 +420,46 @@ export const TicketsSection: React.FC = () => {
                         />
                       </div>
                     </div>
+
+                    {ticketType === 'participant' && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-neutral-700 mb-1">
+                            Age *
+                          </label>
+                          <div className="relative">
+                            <Calendar className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                            <input
+                              type="number"
+                              min="14"
+                              max="60"
+                              required
+                              value={age}
+                              onChange={(e) => setAge(e.target.value)}
+                              placeholder="e.g. 21"
+                              className="w-full pl-9 pr-3 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 focus:bg-white transition-colors"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-medium text-neutral-700 mb-1">
+                            Height *
+                          </label>
+                          <div className="relative">
+                            <Ruler className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                            <input
+                              type="text"
+                              required
+                              value={height}
+                              onChange={(e) => setHeight(e.target.value)}
+                              placeholder="e.g. 5'8&quot; / 173 cm"
+                              className="w-full pl-9 pr-3 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 focus:bg-white transition-colors"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
                     <div>
                       <label className="block text-xs font-medium text-neutral-700 mb-1">

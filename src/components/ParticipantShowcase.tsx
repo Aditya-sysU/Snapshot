@@ -21,13 +21,6 @@ interface ShowcaseItem {
   desc: string;
   tag: string;
   icon: React.ComponentType<{ className?: string }>;
-  accentColor: {
-    badge: string;
-    iconBg: string;
-    iconColor: string;
-    topBorder: string;
-    hoverGlow: string;
-  };
 }
 
 export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegister }) => {
@@ -42,13 +35,6 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
       desc: 'Express your personal fashion sense across ethnic, fusion, couture, and modern western silhouettes with full stage confidence and presence.',
       tag: 'Fashion',
       icon: Shirt,
-      accentColor: {
-        badge: 'bg-rose-50 text-rose-700 border-rose-200',
-        iconBg: 'bg-rose-100/80 text-rose-600',
-        iconColor: 'text-rose-600',
-        topBorder: 'border-t-rose-500',
-        hoverGlow: 'hover:border-rose-300',
-      },
     },
     {
       id: '02',
@@ -58,13 +44,6 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
       desc: 'Collaborate with professional makeup artists and photographers with studio lighting, camera framing, and high-definition fashion shoots.',
       tag: 'Studio',
       icon: Camera,
-      accentColor: {
-        badge: 'bg-amber-50 text-amber-800 border-amber-200',
-        iconBg: 'bg-amber-100/80 text-amber-700',
-        iconColor: 'text-amber-600',
-        topBorder: 'border-t-amber-500',
-        hoverGlow: 'hover:border-amber-300',
-      },
     },
     {
       id: '03',
@@ -74,13 +53,6 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
       desc: 'Curate your official modeling and talent comp cards with high-res editorial deliverables tailored directly for upcoming industry casting.',
       tag: 'Casting',
       icon: FolderHeart,
-      accentColor: {
-        badge: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-        iconBg: 'bg-indigo-100/80 text-indigo-700',
-        iconColor: 'text-indigo-600',
-        topBorder: 'border-t-indigo-500',
-        hoverGlow: 'hover:border-indigo-300',
-      },
     },
     {
       id: '04',
@@ -90,13 +62,6 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
       desc: 'Master stage posture, body alignment, geometric poses, facial angles, and walking rhythm guided directly by experienced runway mentors.',
       tag: 'Runway',
       icon: Sparkles,
-      accentColor: {
-        badge: 'bg-purple-50 text-purple-700 border-purple-200',
-        iconBg: 'bg-purple-100/80 text-purple-700',
-        iconColor: 'text-purple-600',
-        topBorder: 'border-t-purple-500',
-        hoverGlow: 'hover:border-purple-300',
-      },
     },
     {
       id: '05',
@@ -106,13 +71,6 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
       desc: 'Command the central runway spotlight in front of enthusiastic audiences, industry scouts, brand directors, and media cameras.',
       tag: 'Live Stage',
       icon: Footprints,
-      accentColor: {
-        badge: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-        iconBg: 'bg-emerald-100/80 text-emerald-700',
-        iconColor: 'text-emerald-600',
-        topBorder: 'border-t-emerald-500',
-        hoverGlow: 'hover:border-emerald-300',
-      },
     },
     {
       id: '06',
@@ -122,13 +80,6 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
       desc: 'Build valuable long-term connections with fashion designers, stylists, emerging creators, brand owners, and talent agency representatives.',
       tag: 'Community',
       icon: Users,
-      accentColor: {
-        badge: 'bg-cyan-50 text-cyan-800 border-cyan-200',
-        iconBg: 'bg-cyan-100/80 text-cyan-700',
-        iconColor: 'text-cyan-600',
-        topBorder: 'border-t-cyan-500',
-        hoverGlow: 'hover:border-cyan-300',
-      },
     },
   ];
 
@@ -205,14 +156,14 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
                     key={item.id}
                     whileHover={{ y: -6 }}
                     transition={{ duration: 0.3, ease: 'easeOut' }}
-                    className={`w-[85vw] max-w-[340px] sm:w-[400px] md:w-[460px] lg:w-[500px] rounded-2xl bg-white border border-neutral-200/90 p-5 sm:p-8 flex flex-col justify-between shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_18px_45px_rgba(0,0,0,0.08)] ${item.accentColor.hoverGlow} transition-all duration-300 shrink-0 relative overflow-hidden`}
+                    className="w-[85vw] max-w-[340px] sm:w-[400px] md:w-[460px] lg:w-[500px] rounded-2xl bg-white border border-neutral-200/90 p-5 sm:p-8 flex flex-col justify-between shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(111,142,138,0.2)] hover:border-[#6F8E8A] transition-all duration-300 shrink-0 relative overflow-hidden group"
                   >
-                    {/* Subtle Top Accent Border */}
-                    <div className={`absolute top-0 inset-x-0 h-1 bg-gradient-to-r ${item.accentColor.topBorder === 'border-t-rose-500' ? 'from-rose-500 to-pink-400' : item.accentColor.topBorder === 'border-t-amber-500' ? 'from-amber-500 to-orange-400' : item.accentColor.topBorder === 'border-t-indigo-500' ? 'from-indigo-600 to-blue-400' : item.accentColor.topBorder === 'border-t-purple-500' ? 'from-purple-600 to-fuchsia-400' : item.accentColor.topBorder === 'border-t-emerald-500' ? 'from-emerald-500 to-teal-400' : 'from-cyan-500 to-blue-400'}`} />
+                    {/* Top Accent Border - Sage Green Palette */}
+                    <div className="absolute top-0 inset-x-0 h-1 bg-[#6F8E8A]" />
 
                     {/* Top Row: Icon & Location/Track */}
                     <div className="flex items-center justify-between pb-5 border-b border-neutral-100">
-                      <div className={`w-11 h-11 rounded-xl ${item.accentColor.iconBg} flex items-center justify-center shadow-2xs`}>
+                      <div className="w-11 h-11 rounded-xl bg-[#6F8E8A]/10 text-[#6F8E8A] group-hover:bg-[#6F8E8A] group-hover:text-white flex items-center justify-center shadow-2xs transition-colors duration-300">
                         <Icon className="w-5 h-5" />
                       </div>
                       <span
@@ -226,7 +177,7 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
                     {/* Middle Content: Title and Description */}
                     <div className="my-6 space-y-3">
                       <h3
-                        className="font-syne font-bold text-neutral-900 tracking-tight leading-snug"
+                        className="font-syne font-bold text-neutral-900 group-hover:text-[#6F8E8A] transition-colors tracking-tight leading-snug"
                         style={{ fontSize: '20px' }}
                       >
                         {item.title}
@@ -239,15 +190,15 @@ export const ParticipantShowcase: React.FC<ParticipantShowcaseProps> = ({ onRegi
                       </p>
                     </div>
 
-                    {/* Bottom Row: Category with colored badge & Track ID */}
+                    {/* Bottom Row: Category with sage green badge & Track ID */}
                     <div className="flex items-center justify-between pt-5 border-t border-neutral-100">
                       <span
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider border ${item.accentColor.badge}`}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-semibold uppercase tracking-wider border bg-[#6F8E8A]/10 text-[#4C6864] border-[#6F8E8A]/30"
                       >
                         {item.category}
                       </span>
                       <span
-                        className="font-mono text-neutral-400 font-bold"
+                        className="font-mono text-neutral-400 group-hover:text-[#6F8E8A] transition-colors font-bold"
                         style={{ fontSize: '16px' }}
                       >
                         {item.id}

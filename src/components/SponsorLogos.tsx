@@ -181,7 +181,7 @@ export const KamjuCreativesCard: React.FC = () => {
         background: 'radial-gradient(circle at center, #0B1021 0%, #070A14 65%, #030408 100%)',
       }}
     >
-      <div className="absolute w-64 h-64 bg-blue-600/10 rounded-full blur-3xl pointer-events-none -top-10 -right-10" />
+      <div className="absolute w-64 h-64 bg-[#6F8E8A]/10 rounded-full blur-3xl pointer-events-none -top-10 -right-10" />
       <div className="absolute w-64 h-64 bg-purple-600/10 rounded-full blur-3xl pointer-events-none -bottom-10 -left-10" />
 
       <div className="relative z-10 flex flex-col items-center justify-center text-center w-full">

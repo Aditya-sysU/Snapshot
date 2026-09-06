@@ -12,13 +12,13 @@ import { AboutPage } from './pages/AboutPage';
 import { TicketsPage } from './pages/TicketsPage';
 import { AnimatePresence, motion } from 'motion/react';
 
-type Page = 'home' | 'about' | 'tickets';
+type Page = 'home' | 'about' | 'registration' | 'tickets';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>(() => {
     const hash = window.location.hash.replace('#', '').toLowerCase();
     if (hash === 'about') return 'about';
-    if (hash === 'tickets') return 'tickets';
+    if (hash === 'registration' || hash === 'tickets') return 'registration';
     return 'home';
   });
 
@@ -30,8 +30,8 @@ export default function App() {
       const hash = window.location.hash.replace('#', '').toLowerCase();
       if (hash === 'about') {
         setCurrentPage('about');
-      } else if (hash === 'tickets') {
-        setCurrentPage('tickets');
+      } else if (hash === 'registration' || hash === 'tickets') {
+        setCurrentPage('registration');
       } else {
         setCurrentPage('home');
       }
@@ -42,10 +42,11 @@ export default function App() {
   }, []);
 
   const navigateTo = (page: Page, targetSectionId?: string) => {
-    setCurrentPage(page);
-    window.location.hash = page === 'home' ? '' : page;
+    const targetPage = page === 'tickets' ? 'registration' : page;
+    setCurrentPage(targetPage);
+    window.location.hash = targetPage === 'home' ? '' : targetPage;
 
-    if (page === 'home' && targetSectionId) {
+    if (targetPage === 'home' && targetSectionId) {
       setTimeout(() => {
         const el = document.getElementById(targetSectionId);
         if (el) {
@@ -136,9 +137,9 @@ export default function App() {
             </motion.div>
           )}
 
-          {currentPage === 'tickets' && (
+          {(currentPage === 'registration' || currentPage === 'tickets') && (
             <motion.div
-              key="tickets-page"
+              key="registration-page"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}

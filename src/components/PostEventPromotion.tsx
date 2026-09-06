@@ -14,8 +14,8 @@ export const PostEventPromotion: React.FC = () => {
       title: 'Photoshoot & Event Photos',
       desc: 'High-resolution photo galleries made available for press, models, creators, and agency portfolios.',
       icon: Camera,
-      iconColor: 'bg-blue-50 text-blue-600 border-blue-200/70',
-      pill: 'bg-blue-50 text-blue-600 border-blue-200/50',
+      iconColor: 'bg-[#6F8E8A]/10 text-[#4C6864] border-[#6F8E8A]/30',
+      pill: 'bg-[#6F8E8A]/10 text-[#4C6864] border-[#6F8E8A]/30',
     },
     {
       title: 'Winner / Participant Posts',

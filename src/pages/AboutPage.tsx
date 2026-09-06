@@ -152,7 +152,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               Be Part of the SNAPSHOT Stage Era
             </h3>
             <p className="text-neutral-400 text-sm leading-relaxed">
-              Book your audience entry pass or register as a runway participant for the upcoming edition.
+              Register as a runway participant for the upcoming auditions and grand showcase.
             </p>
           </div>
 
@@ -161,7 +161,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               onClick={onNavigateTickets}
               className="bg-white hover:bg-neutral-100 text-black font-semibold px-7 py-3.5 rounded-full transition-all text-sm flex items-center gap-2 cursor-pointer shadow-md"
             >
-              <span>Get Official Passes</span>
+              <span>Register Now</span>
               <ArrowRight className="w-4 h-4" />
             </button>
             <button

@@ -94,9 +94,11 @@
           ],
           "location": {
             "@type": "Place",
-            "name": "Grand Runway Arena",
+            "name": "Grand Runway Arena, Bhopal",
             "address": {
               "@type": "PostalAddress",
+              "addressLocality": "Bhopal",
+              "addressRegion": "Madhya Pradesh",
               "addressCountry": "IN"
             }
           },
@@ -105,14 +107,26 @@
             "name": "A stage for new beginning",
             "url": "/"
           },
-          "offers": {
-            "@type": "Offer",
-            "url": "/#tickets",
-            "price": "1499",
-            "priceCurrency": "INR",
-            "availability": "https://schema.org/InStock",
-            "validFrom": "2026-09-01T00:00:00+05:30"
-          }
+          "offers": [
+            {
+              "@type": "Offer",
+              "name": "Audience Entry Pass",
+              "url": "/#tickets",
+              "price": "200",
+              "priceCurrency": "INR",
+              "availability": "https://schema.org/InStock",
+              "validFrom": "2026-09-01T00:00:00+05:30"
+            },
+            {
+              "@type": "Offer",
+              "name": "Participant Runway Registration",
+              "url": "/#tickets",
+              "price": "3999",
+              "priceCurrency": "INR",
+              "availability": "https://schema.org/InStock",
+              "validFrom": "2026-09-01T00:00:00+05:30"
+            }
+          ]
         }
       ]
     }

@@ -18,7 +18,7 @@ export const TicketsSection: React.FC = () => {
 
   const whatsappNumber = '919111748987';
 
-  const unitPrice = ticketType === 'participant' ? 2999 : 200;
+  const unitPrice = ticketType === 'participant' ? 3999 : 200;
   const totalPrice = unitPrice * (ticketType === 'participant' ? 1 : quantity);
 
   const generateWhatsAppMessage = (data: {
@@ -33,12 +33,12 @@ export const TicketsSection: React.FC = () => {
     auditionSlot: '6-sept' | '13-sept';
   }) => {
     if (data.ticketType === 'audience') {
-      return `Hey! I want to book tickets as a audience.\n\n` +
+      return `Hey! I want to book tickets as an audience member.\n\n` +
         `• Name: ${data.fullName}\n` +
         `• Phone: ${data.phone}\n` +
         (data.email ? `• Email: ${data.email}\n` : '') +
         `• Passes: ${data.quantity} Pass${data.quantity > 1 ? 'es' : ''}\n` +
-        `• Total Amount: ₹${data.totalPrice}\n` +
+        `• Total Amount: ₹${data.totalPrice} (₹200/pass)\n` +
         `• Event: SNAPSHOT Fashion Show (Season 2)\n` +
         `• Date: 27 September 2026 (12 PM – 6 PM)\n` +
         `• Venue: Bhopal, MP`;
@@ -51,7 +51,7 @@ export const TicketsSection: React.FC = () => {
         (data.height ? `• Height: ${data.height}\n` : '') +
         (data.email ? `• Email: ${data.email}\n` : '') +
         `• Audition Slot: ${slotText}\n` +
-        `• Total Amount: ₹2,999 (All-Inclusive Runway Pass)\n` +
+        `• Total Amount: ₹3,999 (All-Inclusive Runway Pass)\n` +
         `• Event: SNAPSHOT Fashion Show (Season 2)\n` +
         `• Location: Bhopal, MP`;
     }
@@ -182,7 +182,7 @@ export const TicketsSection: React.FC = () => {
                   </p>
                 </div>
                 <div className="text-right">
-                  <span className="font-headline font-extrabold text-2xl text-neutral-900">₹2,999</span>
+                  <span className="font-headline font-extrabold text-2xl text-neutral-900">₹3,999</span>
                   <span className="text-xs text-neutral-500 block">all-inclusive</span>
                 </div>
               </div>

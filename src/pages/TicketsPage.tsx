@@ -18,6 +18,8 @@ import {
   MessageSquare,
   ExternalLink,
   Ruler,
+  Plus,
+  Minus,
 } from 'lucide-react';
 import { SnapshotLogo } from '../components/SnapshotLogo';
 import { getEventDateStatus } from '../utils/dateStatus';
@@ -27,6 +29,8 @@ interface TicketsPageProps {
 }
 
 export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
+  const [ticketType, setTicketType] = useState<'audience' | 'participant'>('audience');
+  const [quantity, setQuantity] = useState<number>(1);
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -43,28 +47,47 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
     window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, []);
 
-  const totalPrice = 2999;
+  const unitPrice = ticketType === 'participant' ? 3999 : 200;
+  const totalPrice = unitPrice * (ticketType === 'participant' ? 1 : quantity);
 
   const generateWhatsAppMessage = (data: {
+    ticketType: 'audience' | 'participant';
     fullName: string;
     phone: string;
     email: string;
     age?: string;
     height?: string;
+    quantity: number;
     totalPrice: number;
     auditionSlot: '6-sept' | '13-sept';
   }) => {
-    const slotText = data.auditionSlot === '6-sept' ? 'Slot 1 (6 September 2026)' : 'Slot 2 (13 September 2026)';
-    return `Hey! I want to register as a participant for the runway audition.\n\n` +
-      `• Name: ${data.fullName}\n` +
-      `• Phone: ${data.phone}\n` +
-      (data.age ? `• Age: ${data.age} years\n` : '') +
-      (data.height ? `• Height: ${data.height}\n` : '') +
-      (data.email ? `• Email: ${data.email}\n` : '') +
-      `• Audition Slot: ${slotText}\n` +
-      `• Total Amount: ₹2,999 (All-Inclusive Runway Pass)\n` +
-      `• Event: SNAPSHOT Fashion Show (Season 2)\n` +
-      `• Location: Bhopal, MP`;
+    if (data.ticketType === 'audience') {
+      return (
+        `Hey! I want to book tickets as an audience member.\n\n` +
+        `• Name: ${data.fullName}\n` +
+        `• Phone: ${data.phone}\n` +
+        (data.email ? `• Email: ${data.email}\n` : '') +
+        `• Passes: ${data.quantity} Pass${data.quantity > 1 ? 'es' : ''}\n` +
+        `• Total Amount: ₹${data.totalPrice} (₹200/pass)\n` +
+        `• Event: SNAPSHOT Fashion Show (Season 2)\n` +
+        `• Date: 27 September 2026 (12 PM – 6 PM)\n` +
+        `• Venue: Bhopal, MP`
+      );
+    } else {
+      const slotText = data.auditionSlot === '6-sept' ? 'Slot 1 (6 September 2026)' : 'Slot 2 (13 September 2026)';
+      return (
+        `Hey! I want to register as a participant for the runway audition.\n\n` +
+        `• Name: ${data.fullName}\n` +
+        `• Phone: ${data.phone}\n` +
+        (data.age ? `• Age: ${data.age} years\n` : '') +
+        (data.height ? `• Height: ${data.height}\n` : '') +
+        (data.email ? `• Email: ${data.email}\n` : '') +
+        `• Audition Slot: ${slotText}\n` +
+        `• Total Amount: ₹3,999 (All-Inclusive Runway Pass)\n` +
+        `• Event: SNAPSHOT Fashion Show (Season 2)\n` +
+        `• Location: Bhopal, MP`
+      );
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -77,13 +100,18 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
       fullName,
       phone,
       email,
-      age,
-      height,
-      ticketType: 'participant',
-      quantity: 1,
+      age: ticketType === 'participant' ? age : undefined,
+      height: ticketType === 'participant' ? height : undefined,
+      ticketType,
+      quantity: ticketType === 'participant' ? 1 : quantity,
       totalPrice,
       auditionSlot,
-      date: auditionSlot === '6-sept' ? '6 September 2026' : '13 September 2026',
+      date:
+        ticketType === 'participant'
+          ? auditionSlot === '6-sept'
+            ? '6 September 2026'
+            : '13 September 2026'
+          : '27 September 2026 (12 PM – 6 PM)',
     };
 
     setConfirmedData(bookingDetails);
@@ -91,29 +119,31 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
 
     // Generate WhatsApp URL with custom structured message
     const message = generateWhatsAppMessage({
+      ticketType,
       fullName,
       phone,
       email,
       age,
       height,
+      quantity: ticketType === 'participant' ? 1 : quantity,
       totalPrice,
       auditionSlot,
     });
 
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    
-    // Open WhatsApp in new tab/window
     window.open(whatsappUrl, '_blank');
   };
 
   const handleOpenWhatsApp = () => {
     if (!confirmedData) return;
     const message = generateWhatsAppMessage({
+      ticketType: confirmedData.ticketType,
       fullName: confirmedData.fullName,
       phone: confirmedData.phone,
       email: confirmedData.email,
       age: confirmedData.age,
       height: confirmedData.height,
+      quantity: confirmedData.quantity,
       totalPrice: confirmedData.totalPrice,
       auditionSlot: confirmedData.auditionSlot,
     });
@@ -129,6 +159,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
     setEmail('');
     setAge('');
     setHeight('');
+    setQuantity(1);
   };
 
   return (
@@ -150,10 +181,10 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-3xl mx-auto mb-16 space-y-4"
+          className="text-center max-w-3xl mx-auto mb-12 space-y-4"
         >
           <span className="inline-block text-xs font-semibold uppercase tracking-widest text-neutral-500 bg-white border border-neutral-200/80 px-4 py-1.5 rounded-full shadow-xs">
-            Official Registration Platform
+            Official Passes & Registration
           </span>
 
           <h1
@@ -161,44 +192,122 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
             className="font-headline font-bold text-neutral-900 uppercase tracking-tight"
             style={{ fontSize: '36px', lineHeight: '1.15' }}
           >
-            Runway Registration
+            Passes & Registration
           </h1>
           <p className="text-neutral-600 text-sm sm:text-base leading-relaxed">
-            Register for official runway auditions & model showcase for SNAPSHOT Fashion Show (Season 2).
+            Choose between Audience Spectator Passes (₹200) or register as a Runway Participant (₹3,999) for SNAPSHOT Fashion Show (Season 2).
           </p>
+
+          {/* Type Toggle Pills */}
+          <div className="inline-flex p-1.5 bg-neutral-200/70 rounded-2xl border border-neutral-300/60">
+            <button
+              onClick={() => setTicketType('audience')}
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                ticketType === 'audience'
+                  ? 'bg-neutral-950 text-white shadow-md'
+                  : 'text-neutral-600 hover:text-neutral-950'
+              }`}
+            >
+              Audience Pass • ₹200
+            </button>
+            <button
+              onClick={() => setTicketType('participant')}
+              className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                ticketType === 'participant'
+                  ? 'bg-neutral-950 text-white shadow-md'
+                  : 'text-neutral-600 hover:text-neutral-950'
+              }`}
+            >
+              Runway Participant • ₹3,999
+            </button>
+          </div>
         </motion.div>
 
         {/* Main Booking Section Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
-          {/* Left Column: Participant Audition Registration Info Card */}
+          {/* Left Column: Selectable Options */}
           <div className="lg:col-span-6 space-y-5">
-            {/* Participant Audition Option - Highlighted Card */}
+            {/* Audience Pass Option Card */}
             <div
-              className="p-6 sm:p-8 rounded-3xl bg-white border border-neutral-900 shadow-md ring-2 ring-neutral-900/10 transition-all duration-300 relative overflow-hidden"
+              onClick={() => setTicketType('audience')}
+              className={`p-6 sm:p-7 rounded-3xl cursor-pointer transition-all duration-300 border relative overflow-hidden ${
+                ticketType === 'audience'
+                  ? 'bg-white border-neutral-950 shadow-lg ring-2 ring-neutral-950/10'
+                  : 'bg-white/80 hover:bg-white border-neutral-200/80 hover:shadow-sm'
+              }`}
             >
-              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-neutral-900 via-neutral-700 to-neutral-900" />
-              
+              {ticketType === 'audience' && (
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-neutral-950 via-neutral-700 to-neutral-950" />
+              )}
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="inline-block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-1">
+                    General Admission
+                  </span>
+                  <h3 className="font-headline font-bold text-neutral-900 text-2xl">
+                    Audience Entry Pass
+                  </h3>
+                  <p className="text-neutral-500 text-xs mt-1">
+                    Main Event Access • 27 September 2026 (12 PM – 6 PM)
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span className="font-headline font-extrabold text-3xl text-neutral-900">
+                    ₹200
+                  </span>
+                  <span className="text-xs text-neutral-500 block font-medium">per pass</span>
+                </div>
+              </div>
+
+              <ul className="mt-5 pt-4 border-t border-neutral-100 space-y-2.5 text-xs text-neutral-600">
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-neutral-900 shrink-0" />
+                  <span>Full runway showcase viewing & reserved guest seating</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-neutral-900 shrink-0" />
+                  <span>Live guest designer walk, musical acts & special choreography</span>
+                </li>
+                <li className="flex items-center gap-2.5">
+                  <Check className="w-4 h-4 text-neutral-900 shrink-0" />
+                  <span>Exclusive official fashion showcase merchandise discount</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Participant Audition Option Card */}
+            <div
+              onClick={() => setTicketType('participant')}
+              className={`p-6 sm:p-7 rounded-3xl cursor-pointer transition-all duration-300 border relative overflow-hidden ${
+                ticketType === 'participant'
+                  ? 'bg-white border-neutral-950 shadow-lg ring-2 ring-neutral-950/10'
+                  : 'bg-white/80 hover:bg-white border-neutral-200/80 hover:shadow-sm'
+              }`}
+            >
+              {ticketType === 'participant' && (
+                <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-neutral-950 via-neutral-700 to-neutral-950" />
+              )}
               <div className="flex items-start justify-between">
                 <div>
                   <span className="inline-block text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-1">
                     Official Auditions & Runway
                   </span>
-                  <h2 className="font-headline font-bold text-neutral-900 text-2xl">
+                  <h3 className="font-headline font-bold text-neutral-900 text-2xl">
                     Participant Registration
-                  </h2>
+                  </h3>
                   <p className="text-neutral-500 text-xs mt-1">
                     Audition Slot + Runway Mentorship + Main Showcase
                   </p>
                 </div>
                 <div className="text-right">
                   <span className="font-headline font-extrabold text-3xl text-neutral-900">
-                    ₹2,999
+                    ₹3,999
                   </span>
                   <span className="text-xs text-neutral-500 block font-medium">all-inclusive pass</span>
                 </div>
               </div>
 
-              <ul className="mt-6 pt-5 border-t border-neutral-100 space-y-3.5 text-xs text-neutral-600">
+              <ul className="mt-5 pt-4 border-t border-neutral-100 space-y-2.5 text-xs text-neutral-600">
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-neutral-900 shrink-0" />
                   <span>Official jury audition slot (Choose 6 Sept or 13 Sept 2026)</span>
@@ -213,7 +322,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                 </li>
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-neutral-900 shrink-0" />
-                  <span>Grand runway showcase entry for 27 September 2026</span>
+                  <span>Grand runway showcase entry on 27 September 2026</span>
                 </li>
               </ul>
             </div>
@@ -221,7 +330,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
             {/* Audition Dates Reminder Card */}
             <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 space-y-3">
               <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 block">
-                Audition Dates & Venue
+                Audition Dates & Key Timeline
               </span>
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-neutral-50 border border-neutral-200/60">
@@ -270,7 +379,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
             </div>
           </div>
 
-          {/* Right Column: Registration Form */}
+          {/* Right Column: Dynamic Registration & Booking Form */}
           <div className="lg:col-span-6 bg-white border border-neutral-200/90 rounded-3xl p-6 sm:p-8 shadow-sm">
             <AnimatePresence mode="wait">
               {isSuccess && confirmedData ? (
@@ -288,30 +397,32 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                   <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-[11px] font-semibold mb-2">
                       <Clock className="w-3.5 h-3.5 text-amber-700" />
-                      <span>Registration Forwarded to WhatsApp</span>
+                      <span>Forwarded to WhatsApp</span>
                     </div>
                     <h3 className="font-headline font-bold text-2xl text-neutral-900">
-                      Registration Request Sent
+                      {confirmedData.ticketType === 'audience' ? 'Pass Booking Request Sent' : 'Registration Request Sent'}
                     </h3>
                     <p className="text-xs text-neutral-500 mt-1 max-w-sm mx-auto">
-                      Your registration details have been sent to our team on WhatsApp (<span className="font-mono text-neutral-800 font-semibold">+91 91117 48987</span>).
+                      Your details have been sent to our event coordinator on WhatsApp (<span className="font-mono text-neutral-800 font-semibold">+91 91117 48987</span>).
                     </p>
                   </div>
 
-                  {/* Registration Request Summary Slip */}
+                  {/* Booking Request Summary Slip */}
                   <div className="bg-[#0A0A0A] text-white rounded-2xl p-5 text-left border border-neutral-800 space-y-4">
                     <div className="flex justify-between items-start border-b border-neutral-800 pb-3">
                       <div>
                         <span className="text-[10px] text-neutral-400 uppercase font-semibold">
-                          Registration Category
+                          Category
                         </span>
                         <p className="font-headline font-bold text-base text-white capitalize">
-                          Participant Runway Audition
+                          {confirmedData.ticketType === 'participant'
+                            ? 'Participant Runway Audition'
+                            : `Audience Entry Pass (${confirmedData.quantity} Pass${confirmedData.quantity > 1 ? 'es' : ''})`}
                         </p>
                       </div>
                       <div className="text-right">
                         <span className="text-[10px] text-neutral-400 uppercase font-semibold block">
-                          Registration Ref
+                          Booking Ref
                         </span>
                         <span className="px-2 py-0.5 rounded bg-neutral-800 text-[11px] font-mono text-amber-400 font-bold">
                           {confirmedData.passId}
@@ -341,11 +452,13 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                         </div>
                       )}
                       <div>
-                        <span className="text-neutral-400 block text-[10px]">Audition Slot</span>
+                        <span className="text-neutral-400 block text-[10px]">
+                          {confirmedData.ticketType === 'participant' ? 'Audition Slot' : 'Event Date'}
+                        </span>
                         <span className="font-medium text-white">{confirmedData.date}</span>
                       </div>
                       <div>
-                        <span className="text-neutral-400 block text-[10px]">Registration Fee</span>
+                        <span className="text-neutral-400 block text-[10px]">Total Amount</span>
                         <span className="font-medium text-emerald-400 font-headline text-sm">
                           ₹{confirmedData.totalPrice}
                         </span>
@@ -355,17 +468,17 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                     {/* How Confirmation Works */}
                     <div className="bg-neutral-900/90 rounded-xl p-3.5 border border-neutral-800 text-[11px] space-y-2">
                       <span className="font-semibold text-neutral-200 block text-xs">
-                        How to complete your registration:
+                        Next steps:
                       </span>
                       <ol className="space-y-1.5 text-neutral-400 list-decimal list-inside leading-relaxed">
                         <li>
-                          <strong className="text-neutral-300">WhatsApp Chat:</strong> Send the pre-filled message to our team coordinator.
+                          <strong className="text-neutral-300">WhatsApp Chat:</strong> Review and send the pre-filled message on WhatsApp.
                         </li>
                         <li>
-                          <strong className="text-neutral-300">Payment:</strong> Complete UPI transfer using the official QR / details shared by team.
+                          <strong className="text-neutral-300">Payment:</strong> Complete UPI transfer using the official QR / details provided.
                         </li>
                         <li>
-                          <strong className="text-neutral-300">Audition Confirmation:</strong> Receive your verified participant ID and reporting schedule directly on WhatsApp.
+                          <strong className="text-neutral-300">E-Pass Confirmation:</strong> Receive your verified digital entry pass directly on WhatsApp.
                         </li>
                       </ol>
                     </div>
@@ -385,7 +498,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                         onClick={handleReset}
                         className="flex-1 bg-black hover:bg-neutral-800 text-white font-semibold py-3.5 rounded-full transition-all text-xs cursor-pointer shadow-sm"
                       >
-                        Register Another Participant
+                        Book Another Ticket
                       </button>
                       <button
                         onClick={onNavigateHome}
@@ -398,7 +511,7 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                 </motion.div>
               ) : (
                 <motion.form
-                  key="registration-form"
+                  key="booking-form"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -407,58 +520,116 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                 >
                   <div className="border-b border-neutral-100 pb-3">
                     <h3 className="font-headline font-bold text-lg text-neutral-900">
-                      Participant Registration Form
+                      {ticketType === 'audience' ? 'Audience Pass Booking' : 'Participant Registration'}
                     </h3>
                     <p className="text-xs text-neutral-500 mt-0.5">
-                      Provide contact information to register directly with team via WhatsApp (+91 91117 48987).
+                      {ticketType === 'audience'
+                        ? 'Book spectator tickets (₹200/pass) for 27 September 2026 directly via WhatsApp.'
+                        : 'Register for jury auditions (₹3,999 all-inclusive) directly via WhatsApp.'}
                     </p>
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-2">
-                      Audition Slot Preference *
-                    </label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setAuditionSlot('6-sept')}
-                        className={`p-3 rounded-xl border text-xs text-left cursor-pointer transition-all ${
-                          auditionSlot === '6-sept'
-                            ? 'border-neutral-900 bg-neutral-50 font-semibold text-neutral-900 ring-1 ring-neutral-900'
-                            : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="block font-medium">Slot 1</span>
-                          {getEventDateStatus('2026-09-06').isLive && (
-                            <span className="inline-flex items-center text-[9px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full animate-pulse">
-                              LIVE
-                            </span>
-                          )}
+                  {/* Quantity selector for audience passes */}
+                  {ticketType === 'audience' && (
+                    <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-semibold text-neutral-800">
+                          Number of Passes:
+                        </label>
+                        <span className="text-xs font-medium text-neutral-500">
+                          ₹200 × {quantity} = <strong className="text-neutral-950 font-bold">₹{totalPrice}</strong>
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center border border-neutral-300 rounded-xl bg-white overflow-hidden shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="p-2.5 text-neutral-600 hover:bg-neutral-100 cursor-pointer transition-colors"
+                          >
+                            <Minus className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="w-10 text-center font-bold text-sm text-neutral-900">
+                            {quantity}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setQuantity(Math.min(10, quantity + 1))}
+                            className="p-2.5 text-neutral-600 hover:bg-neutral-100 cursor-pointer transition-colors"
+                          >
+                            <Plus className="w-3.5 h-3.5" />
+                          </button>
                         </div>
-                        <span className="text-neutral-500">6 Sept 2026</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAuditionSlot('13-sept')}
-                        className={`p-3 rounded-xl border text-xs text-left cursor-pointer transition-all ${
-                          auditionSlot === '13-sept'
-                            ? 'border-neutral-900 bg-neutral-50 font-semibold text-neutral-900 ring-1 ring-neutral-900'
-                            : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="block font-medium">Slot 2</span>
-                          {getEventDateStatus('2026-09-13').isLive && (
-                            <span className="inline-flex items-center text-[9px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full animate-pulse">
-                              LIVE
-                            </span>
-                          )}
+
+                        <div className="flex items-center gap-1.5 overflow-x-auto py-1">
+                          {[1, 2, 3, 4, 5].map((n) => (
+                            <button
+                              key={n}
+                              type="button"
+                              onClick={() => setQuantity(n)}
+                              className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
+                                quantity === n
+                                  ? 'bg-neutral-900 text-white border-neutral-900 shadow-xs'
+                                  : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300'
+                              }`}
+                            >
+                              {n}
+                            </button>
+                          ))}
                         </div>
-                        <span className="text-neutral-500">13 Sept 2026</span>
-                      </button>
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* Audition Slot Selector for participants */}
+                  {ticketType === 'participant' && (
+                    <div>
+                      <label className="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-2">
+                        Audition Slot Preference *
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setAuditionSlot('6-sept')}
+                          className={`p-3 rounded-xl border text-xs text-left cursor-pointer transition-all ${
+                            auditionSlot === '6-sept'
+                              ? 'border-neutral-900 bg-neutral-50 font-semibold text-neutral-900 ring-1 ring-neutral-900'
+                              : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="block font-medium">Slot 1</span>
+                            {getEventDateStatus('2026-09-06').isLive && (
+                              <span className="inline-flex items-center text-[9px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full animate-pulse">
+                                LIVE
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-neutral-500">6 Sept 2026</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAuditionSlot('13-sept')}
+                          className={`p-3 rounded-xl border text-xs text-left cursor-pointer transition-all ${
+                            auditionSlot === '13-sept'
+                              ? 'border-neutral-900 bg-neutral-50 font-semibold text-neutral-900 ring-1 ring-neutral-900'
+                              : 'border-neutral-200 text-neutral-600 hover:border-neutral-300'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="block font-medium">Slot 2</span>
+                            {getEventDateStatus('2026-09-13').isLive && (
+                              <span className="inline-flex items-center text-[9px] font-black text-white bg-red-600 px-1.5 py-0.5 rounded-full animate-pulse">
+                                LIVE
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-neutral-500">13 Sept 2026</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="space-y-3">
                     <div>
@@ -495,43 +666,46 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-700 mb-1">
-                          Age *
-                        </label>
-                        <div className="relative">
-                          <Calendar className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
-                          <input
-                            type="number"
-                            min="14"
-                            max="60"
-                            required
-                            value={age}
-                            onChange={(e) => setAge(e.target.value)}
-                            placeholder="e.g. 21"
-                            className="w-full pl-9 pr-3 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 focus:bg-white transition-colors"
-                          />
+                    {/* Participant-only fields */}
+                    {ticketType === 'participant' && (
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs font-medium text-neutral-700 mb-1">
+                            Age *
+                          </label>
+                          <div className="relative">
+                            <Calendar className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                            <input
+                              type="number"
+                              min="14"
+                              max="60"
+                              required
+                              value={age}
+                              onChange={(e) => setAge(e.target.value)}
+                              placeholder="e.g. 21"
+                              className="w-full pl-9 pr-3 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 focus:bg-white transition-colors"
+                            />
+                          </div>
                         </div>
-                      </div>
 
-                      <div>
-                        <label className="block text-xs font-medium text-neutral-700 mb-1">
-                          Height *
-                        </label>
-                        <div className="relative">
-                          <Ruler className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
-                          <input
-                            type="text"
-                            required
-                            value={height}
-                            onChange={(e) => setHeight(e.target.value)}
-                            placeholder="e.g. 5'8&quot; / 173 cm"
-                            className="w-full pl-9 pr-3 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 focus:bg-white transition-colors"
-                          />
+                        <div>
+                          <label className="block text-xs font-medium text-neutral-700 mb-1">
+                            Height *
+                          </label>
+                          <div className="relative">
+                            <Ruler className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                            <input
+                              type="text"
+                              required
+                              value={height}
+                              onChange={(e) => setHeight(e.target.value)}
+                              placeholder="e.g. 5'8&quot; / 173 cm"
+                              className="w-full pl-9 pr-3 py-2.5 text-xs bg-neutral-50 border border-neutral-200 rounded-xl focus:outline-none focus:border-neutral-900 focus:bg-white transition-colors"
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     <div>
                       <label className="block text-xs font-medium text-neutral-700 mb-1">
@@ -553,8 +727,10 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                   {/* Summary & Confirm Button */}
                   <div className="pt-4 border-t border-neutral-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                     <div>
-                      <span className="text-[11px] text-neutral-500 block">Registration Fee</span>
-                      <span className="font-headline font-bold text-xl text-neutral-900">
+                      <span className="text-[11px] text-neutral-500 block">
+                        {ticketType === 'audience' ? `Total (${quantity} pass${quantity > 1 ? 'es' : ''})` : 'All-Inclusive Fee'}
+                      </span>
+                      <span className="font-headline font-bold text-2xl text-neutral-900">
                         ₹{totalPrice}
                       </span>
                     </div>
@@ -564,12 +740,14 @@ export const TicketsPage: React.FC<TicketsPageProps> = ({ onNavigateHome }) => {
                       id="btn-confirm-registration"
                       className="bg-black hover:bg-neutral-800 text-white font-semibold px-6 py-3.5 rounded-full transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-sm active:scale-95"
                     >
-                      <span>Register via WhatsApp</span>
+                      <span>
+                        {ticketType === 'audience' ? 'Book Passes via WhatsApp' : 'Register via WhatsApp'}
+                      </span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
                   <p className="text-[11px] text-neutral-500 text-center">
-                    Clicking register will redirect to WhatsApp with your submitted details to +91 91117 48987
+                    Submitting will open WhatsApp with your booking details sent to +91 91117 48987
                   </p>
                 </motion.form>
               )}

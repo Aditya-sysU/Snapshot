@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Check, Ticket, Sparkles, User, Mail, Phone, Calendar, ArrowRight, ShieldCheck, QrCode, Ruler } from 'lucide-react';
+import { X, Check, Ticket, Sparkles, User, Mail, Phone, Calendar, ArrowRight, ShieldCheck, QrCode, Ruler, Plus, Minus, MessageSquare } from 'lucide-react';
 import { SnapshotLogo } from './SnapshotLogo';
 import { getEventDateStatus } from '../utils/dateStatus';
 
@@ -12,7 +12,12 @@ interface TicketModalProps {
 export const TicketModal: React.FC<TicketModalProps> = ({
   isOpen,
   onClose,
+  initialType = 'audience',
 }) => {
+  const [ticketType, setTicketType] = useState<'audience' | 'participant'>(
+    initialType === 'participant' ? 'participant' : 'audience'
+  );
+  const [quantity, setQuantity] = useState<number>(1);
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -24,26 +29,33 @@ export const TicketModal: React.FC<TicketModalProps> = ({
 
   if (!isOpen) return null;
 
-  const totalPrice = 2999;
+  const unitPrice = ticketType === 'participant' ? 3999 : 200;
+  const totalPrice = unitPrice * (ticketType === 'participant' ? 1 : quantity);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName || !phone) return;
 
     const passId = `SNP-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-    setConfirmedData({
+    const details = {
       passId,
       fullName,
       phone,
       email,
-      age,
-      height,
-      ticketType: 'participant',
-      quantity: 1,
+      age: ticketType === 'participant' ? age : undefined,
+      height: ticketType === 'participant' ? height : undefined,
+      ticketType,
+      quantity: ticketType === 'participant' ? 1 : quantity,
       totalPrice,
       auditionSlot,
-      date: auditionSlot === '6-sept' ? '6 September 2026' : '13 September 2026',
-    });
+      date:
+        ticketType === 'participant'
+          ? auditionSlot === '6-sept'
+            ? '6 September 2026'
+            : '13 September 2026'
+          : '27 September 2026 (12 PM – 6 PM)',
+    };
+    setConfirmedData(details);
     setIsSuccess(true);
   };
 
@@ -55,6 +67,7 @@ export const TicketModal: React.FC<TicketModalProps> = ({
     setEmail('');
     setAge('');
     setHeight('');
+    setQuantity(1);
     onClose();
   };
 
@@ -67,9 +80,9 @@ export const TicketModal: React.FC<TicketModalProps> = ({
             <SnapshotLogo size={32} color="#111" strokeWidth={2} />
             <div>
               <h3 className="font-brand font-black text-base text-neutral-900 uppercase tracking-wide">
-                SNAPSHOT REGISTRATION
+                SNAPSHOT PASSES
               </h3>
-              <p className="text-xs text-neutral-500">Season 2 • Runway Participant</p>
+              <p className="text-xs text-neutral-500">Season 2 • Passes & Registration</p>
             </div>
           </div>
           <button
@@ -128,7 +141,9 @@ export const TicketModal: React.FC<TicketModalProps> = ({
                     </div>
                   )}
                   <div>
-                    <span className="text-neutral-400 block text-[10px]">Date</span>
+                    <span className="text-neutral-400 block text-[10px]">
+                      {confirmedData.ticketType === 'participant' ? 'Audition Slot' : 'Event Date'}
+                    </span>
                     <span className="font-medium">{confirmedData.date}</span>
                   </div>
                   <div>
@@ -156,59 +171,124 @@ export const TicketModal: React.FC<TicketModalProps> = ({
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Type Switcher */}
+              <div className="grid grid-cols-2 gap-2 p-1 bg-neutral-100 rounded-2xl border border-neutral-200">
+                <button
+                  type="button"
+                  onClick={() => setTicketType('audience')}
+                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    ticketType === 'audience'
+                      ? 'bg-black text-white shadow-xs'
+                      : 'text-neutral-600 hover:text-black'
+                  }`}
+                >
+                  Audience Pass (₹200)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTicketType('participant')}
+                  className={`py-2 px-3 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    ticketType === 'participant'
+                      ? 'bg-black text-white shadow-xs'
+                      : 'text-neutral-600 hover:text-black'
+                  }`}
+                >
+                  Participant (₹3,999)
+                </button>
+              </div>
+
               {/* Category Info */}
               <div className="p-4 rounded-2xl border border-black bg-neutral-50 ring-1 ring-black">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-bold text-neutral-900">Runway Participant Entry</span>
-                  <span className="font-brand font-bold text-base text-black">₹2,999</span>
+                  <span className="text-xs font-bold text-neutral-900">
+                    {ticketType === 'audience' ? 'Audience General Admission' : 'Runway Participant Entry'}
+                  </span>
+                  <span className="font-brand font-bold text-base text-black">
+                    {ticketType === 'audience' ? '₹200' : '₹3,999'}
+                  </span>
                 </div>
                 <p className="text-xs text-neutral-600">
-                  Audition slot, professional choreography coaching, styling & grand runway showcase.
+                  {ticketType === 'audience'
+                    ? 'Spectator admission to grand 6-hour runway show on 27 September 2026.'
+                    : 'Audition slot, professional choreography coaching, styling & grand runway showcase.'}
                 </p>
               </div>
 
-              {/* Participant Audition Date choice */}
-              <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-3.5 space-y-2">
-                <label className="block text-xs font-semibold text-neutral-700">
-                  Preferred Audition Slot:
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <label className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${auditionSlot === '6-sept' ? 'border-black bg-white font-semibold' : 'border-neutral-200'}`}>
-                    <input
-                      type="radio"
-                      name="auditionSlot"
-                      checked={auditionSlot === '6-sept'}
-                      onChange={() => setAuditionSlot('6-sept')}
-                      className="accent-black"
-                    />
-                    <span className="flex items-center gap-1">
-                      Audition 1 (6 Sept)
-                      {getEventDateStatus('2026-09-06').isLive && (
-                        <span className="text-[8px] font-black text-white bg-red-600 px-1 py-0.2 rounded-full animate-pulse">
-                          LIVE
-                        </span>
-                      )}
+              {/* Quantity selector for Audience */}
+              {ticketType === 'audience' && (
+                <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-3.5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-neutral-700">
+                      Pass Quantity:
+                    </label>
+                    <span className="text-xs text-neutral-500 font-medium">
+                      ₹200 × {quantity} = <strong className="text-black font-bold">₹{totalPrice}</strong>
                     </span>
-                  </label>
-                  <label className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${auditionSlot === '13-sept' ? 'border-black bg-white font-semibold' : 'border-neutral-200'}`}>
-                    <input
-                      type="radio"
-                      name="auditionSlot"
-                      checked={auditionSlot === '13-sept'}
-                      onChange={() => setAuditionSlot('13-sept')}
-                      className="accent-black"
-                    />
-                    <span className="flex items-center gap-1">
-                      Audition 2 (13 Sept)
-                      {getEventDateStatus('2026-09-13').isLive && (
-                        <span className="text-[8px] font-black text-white bg-red-600 px-1 py-0.2 rounded-full animate-pulse">
-                          LIVE
-                        </span>
-                      )}
-                    </span>
-                  </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="p-2 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-100 cursor-pointer"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="w-8 text-center font-bold text-sm">{quantity}</span>
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(Math.min(10, quantity + 1))}
+                      className="p-2 rounded-lg border border-neutral-300 bg-white hover:bg-neutral-100 cursor-pointer"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Participant Audition Date choice */}
+              {ticketType === 'participant' && (
+                <div className="bg-neutral-50 border border-neutral-200 rounded-2xl p-3.5 space-y-2">
+                  <label className="block text-xs font-semibold text-neutral-700">
+                    Preferred Audition Slot:
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <label className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${auditionSlot === '6-sept' ? 'border-black bg-white font-semibold' : 'border-neutral-200'}`}>
+                      <input
+                        type="radio"
+                        name="auditionSlot"
+                        checked={auditionSlot === '6-sept'}
+                        onChange={() => setAuditionSlot('6-sept')}
+                        className="accent-black"
+                      />
+                      <span className="flex items-center gap-1">
+                        Audition 1 (6 Sept)
+                        {getEventDateStatus('2026-09-06').isLive && (
+                          <span className="text-[8px] font-black text-white bg-red-600 px-1 py-0.2 rounded-full animate-pulse">
+                            LIVE
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                    <label className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer ${auditionSlot === '13-sept' ? 'border-black bg-white font-semibold' : 'border-neutral-200'}`}>
+                      <input
+                        type="radio"
+                        name="auditionSlot"
+                        checked={auditionSlot === '13-sept'}
+                        onChange={() => setAuditionSlot('13-sept')}
+                        className="accent-black"
+                      />
+                      <span className="flex items-center gap-1">
+                        Audition 2 (13 Sept)
+                        {getEventDateStatus('2026-09-13').isLive && (
+                          <span className="text-[8px] font-black text-white bg-red-600 px-1 py-0.2 rounded-full animate-pulse">
+                            LIVE
+                          </span>
+                        )}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              )}
 
               {/* User Details */}
               <div className="space-y-3">
@@ -246,43 +326,45 @@ export const TicketModal: React.FC<TicketModalProps> = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                      Age *
-                    </label>
-                    <div className="relative">
-                      <Calendar className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
-                      <input
-                        type="number"
-                        min="14"
-                        max="60"
-                        required
-                        placeholder="e.g. 21"
-                        value={age}
-                        onChange={(e) => setAge(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-neutral-200 focus:border-black focus:outline-none bg-white"
-                      />
+                {ticketType === 'participant' && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
+                        Age *
+                      </label>
+                      <div className="relative">
+                        <Calendar className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                        <input
+                          type="number"
+                          min="14"
+                          max="60"
+                          required
+                          placeholder="e.g. 21"
+                          value={age}
+                          onChange={(e) => setAge(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-neutral-200 focus:border-black focus:outline-none bg-white"
+                        />
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-neutral-700 mb-1">
-                      Height *
-                    </label>
-                    <div className="relative">
-                      <Ruler className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
-                      <input
-                        type="text"
-                        required
-                        placeholder="e.g. 5'8&quot; / 173 cm"
-                        value={height}
-                        onChange={(e) => setHeight(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-neutral-200 focus:border-black focus:outline-none bg-white"
-                      />
+                    <div>
+                      <label className="block text-xs font-semibold text-neutral-700 mb-1">
+                        Height *
+                      </label>
+                      <div className="relative">
+                        <Ruler className="w-4 h-4 text-neutral-400 absolute left-3 top-3" />
+                        <input
+                          type="text"
+                          required
+                          placeholder="e.g. 5'8&quot; / 173 cm"
+                          value={height}
+                          onChange={(e) => setHeight(e.target.value)}
+                          className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-neutral-200 focus:border-black focus:outline-none bg-white"
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
 
                 <div>
                   <label className="block text-xs font-semibold text-neutral-700 mb-1">
@@ -312,7 +394,7 @@ export const TicketModal: React.FC<TicketModalProps> = ({
                   type="submit"
                   className="bg-black hover:bg-neutral-800 text-white text-sm font-semibold px-6 py-3 rounded-full transition-all flex items-center gap-2 cursor-pointer shadow-sm"
                 >
-                  <span>Register Participant</span>
+                  <span>{ticketType === 'audience' ? 'Book Pass' : 'Register Participant'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://ais-dev-ygmjw7lx5qt2o5ikbzq4sv-345214615062.asia-southeast1.run.app/</loc>
-    <lastmod>2026-09-04</lastmod>
+    <loc>https://www.snapshotspace.in/</loc>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://ais-dev-ygmjw7lx5qt2o5ikbzq4sv-345214615062.asia-southeast1.run.app/logo.png</image:loc>
-      <image:title>A stage for new beginning - Official Fashion Show Logo</image:title>
-      <image:caption>Official Brand Logo for SNAPSHOT Fashion Show - A stage for new beginning</image:caption>
+      <image:loc>https://www.snapshotspace.in/logo.png</image:loc>
+      <image:title>SNAPSHOT Fashion Show - Official Brand Logo</image:title>
+      <image:caption>SNAPSHOT Fashion Show Season 2: A Stage for New Beginning</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://ais-dev-ygmjw7lx5qt2o5ikbzq4sv-345214615062.asia-southeast1.run.app/og-image.png</image:loc>
-      <image:title>A stage for new beginning Fashion Show Runway Showcase</image:title>
-      <image:caption>SNAPSHOT Fashion Show Season 2: S² Stage Era Runway</image:caption>
+      <image:loc>https://www.snapshotspace.in/og-image.png</image:loc>
+      <image:title>SNAPSHOT Fashion Show Season 2 Runway Showcase</image:title>
+      <image:caption>Premier fashion runway event in Bhopal, Madhya Pradesh</image:caption>
     </image:image>
   </url>
 </urlset>
